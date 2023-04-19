@@ -4,17 +4,27 @@ import java.security.*;
 public class DigestCalculatorTest {
 
     public static void main(String[] args) {
+        
+        // Valida os argumentos
+        if (DigestCalculator.validateArgs(args) == -1){
+            return;
+        }
+
+
         // Criar uma pasta temporária com alguns arquivos de teste
-        File directory = new File(System.getProperty("java.io.tmpdir"), "testdir");
+        File directory = new File(System.getProperty("user.dir"), "testdir");
         directory.mkdir();
+
         File file1 = new File(directory, "file1.txt");
-        FileWriter writer1;
+        File file2 = new File(directory, "file2.txt");
+
         try {
-            writer1 = new FileWriter(file1);
+            FileWriter writer1 = new FileWriter(file1);
+            FileWriter writer2 = new FileWriter(file2);
+
+            // Escreve o conteúdo nos arquivos temporários
             writer1.write("conteúdo do arquivo 1");
             writer1.close();
-            File file2 = new File(directory, "file2.txt");
-            FileWriter writer2 = new FileWriter(file2);
             writer2.write("conteúdo do arquivo 2");
             writer2.close();
         
