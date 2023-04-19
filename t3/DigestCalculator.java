@@ -1,5 +1,7 @@
 import java.io.*;
 import java.security.*;
+import javax.xml.parsers.*;
+import org.w3c.dom.*;
 
 public class DigestCalculator{
 
@@ -34,4 +36,47 @@ public class DigestCalculator{
 
     }
 
+    public static void readXML(String listaDigest) {
+       //Leitura dos arquivos xml
+        try {
+            File fileDirectory = new File(listaDigest);
+            for (final File fileEntry : fileDirectory.listFiles()) {
+                
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse(fileEntry.getName());
+                doc.getDocumentElement().normalize();
+
+                NodeList fileList = doc.getElementsByTagName("FILE_ENTRY");
+                // itera os arquvios na lista
+                for (int i = 0; i < fileList.getLength(); i++) {
+                    Node fileNode = fileList.item(i);
+                    if (fileNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element fileElement = (Element) fileNode;
+                        // pega o nome do arquivo
+                        String fileName = fileElement.getElementsByTagName("FILE_NAME").item(0).getTextContent();
+
+                        NodeList digestList = fileElement.getElementsByTagName("DIGEST_ENTRY");
+                        
+                        // ITERA OS DIGEST_ENTRY
+                        for (int j = 0; j < digestList.getLength(); j++) {
+                            Node digestNode = digestList.item(j);
+                            if (digestNode.getNodeType() == Node.ELEMENT_NODE) {
+                                Element digestElement = (Element) digestNode;
+                                
+                                // Extrai os dados do digest
+                                String digestType = digestElement.getElementsByTagName("DIGEST_TYPE").item(0).getTextContent();
+                                String digestHex = digestElement.getElementsByTagName("DIGEST_HEX").item(0).getTextContent();
+                                
+                                // Output em uma string
+                                System.out.println("FILE_NAME: " + fileName + ", DIGEST_TYPE: " + digestType + ", DIGEST_HEX: ");
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
