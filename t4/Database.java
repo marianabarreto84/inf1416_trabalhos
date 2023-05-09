@@ -16,10 +16,9 @@ public class Database{
         try {
             Class.forName("org.sqlite.JDBC");
             conn = DriverManager.getConnection("jdbc:sqlite:banco.db");
-            System.out.println("[cria_tabela] Conexão com o banco de dados estabelecida com sucesso.");
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
-            System.out.println("[cria_tabela] Tabela " + table_name +  " criada com sucesso.");
+            // System.out.println("[cria_tabela] Tabela " + table_name +  " criada com sucesso.");
         } catch (Exception e) {
             System.out.println("[cria_tabela] Exceção ao criar tabela " + table_name + ": " + e);
             System.exit(0);
@@ -53,16 +52,30 @@ public class Database{
                 stmt.setString(2, texto);
                 stmt.executeUpdate();
             }
-            System.out.println("[popula_mensagens] Tabela de mensagens populada com sucesso.");
+            // System.out.println("[popula_mensagens] Tabela de mensagens populada com sucesso.");
         } catch (Exception e) {
             System.out.println("[popula_mensagens] Exceção ao popular mensagens: " + e);
         }
     }
 
-    public static void main(String args[]){
-        String tabela_usuarios = "CREATE TABLE Usuarios (UID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nome TEXT NOT NULL, senha TEXT NOT NULL, email TEXT NOT NULL, certificado TEXT NOT NULL, chave_privada TEXT NOT NULL)";
-        String tabela_chaveiro = "CREATE TABLE Chaveiro (KID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, UID INTEGER NOT NULL, certificado TEXT NOT NULL, chave_privada TEXT NOT NULL, FOREIGN KEY (UID) REFERENCES Usuarios(UID))";
-        String tabela_grupos = "CREATE TABLE Grupos (GID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)";
+    private static void popula_grupos(String nome_grupo){
+        Connection conn = null;
+        String sql = "INSERT INTO Grupos (nome) VALUES (?)";
+        try{
+            conn = DriverManager.getConnection("jdbc:sqlite:banco.db");
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, nome_grupo);
+            stmt.executeUpdate();
+        }
+        catch (Exception e){
+            System.out.println("[popula_grupos] Exceção ao popular grupos: " + e);
+        }
+    }
+
+    public static void cria_banco(){
+        String tabela_usuarios = "CREATE TABLE Usuarios (UID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nome TEXT NOT NULL, senha TEXT NOT NULL, email TEXT NOT NULL, certificado TEXT NOT NULL, chave_privada TEXT NOT NULL, GID INTEGER, FOREIGN KEY (GID) REFERENCES Grupos (GID) ON DELETE CASCADE);";
+        String tabela_chaveiro = "CREATE TABLE Chaveiro (KID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, UID INTEGER NOT NULL, certificado TEXT NOT NULL, chave_privada TEXT NOT NULL, FOREIGN KEY (UID) REFERENCES Usuarios(UID));";
+        String tabela_grupos = "CREATE TABLE Grupos (GID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nome TEXT NOT NULL);";
         String tabela_mensagens = "CREATE TABLE Mensagens (MID INTEGER PRIMARY KEY, texto TEXT NOT NULL);";
         String tabela_registros = "CREATE TABLE Registros (RID INTEGER PRIMARY KEY, MID INTEGER NOT NULL, UID INTEGER, data_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (MID) REFERENCES Mensagens (MID) ON DELETE CASCADE, FOREIGN KEY (UID) REFERENCES Usuarios (UID) ON DELETE SET NULL);";
 
@@ -72,5 +85,8 @@ public class Database{
         cria_tabela(tabela_mensagens, "Mensagens");
         cria_tabela(tabela_registros, "Registros");
         popula_mensagens("tabela_mensagens.txt");
+        popula_grupos("Administrador");
+        popula_grupos("Usuário");
     }
+
 }

@@ -1,6 +1,6 @@
 # INF1416 - Trabalho 4
-Nome: Gustavo Sampaio
-Nome: Mariana Barreto
+Nome: Gustavo Sampaio - Matrícula: 1712045
+Nome: Mariana Barreto - Matrícula: 1820673
 
 ## Criação do Banco de Dados
 
