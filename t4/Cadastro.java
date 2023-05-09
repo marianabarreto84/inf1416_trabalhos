@@ -18,16 +18,6 @@ public class Cadastro{
         return 0;
     }
 
-    public static void exibe_cabecalho(String login_do_usuario, String grupo_do_usuario, String nome_do_usuario){
-        System.out.println("Login: " + login_do_usuario);
-        System.out.println("Grupo: " + grupo_do_usuario);
-        System.out.println("Nome: " + nome_do_usuario);
-    }
-
-    public static void exibe_corpo1(int total_usuarios){
-        System.out.println("Total de usuários do sistema: " + total_usuarios);
-    }
-
     public static void executa_formulario(){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Formulário de Cadastro:");
