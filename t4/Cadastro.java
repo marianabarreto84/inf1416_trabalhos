@@ -18,7 +18,7 @@ public class Cadastro{
         return 0;
     }
 
-    public static void executa_formulario(){
+    public static Usuario executa_formulario(Usuario usuario){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Formulário de Cadastro:");
         System.out.print("Caminho do arquivo do certificado digital: ");
@@ -57,6 +57,14 @@ public class Cadastro{
             System.out.print("Confirmação senha pessoal: ");
             confirmacao_senha_pessoal = scanner.nextLine();
         }
+
+        usuario.caminho_certificado = caminho_certificado;
+        usuario.caminho_chave_privada = caminho_chave_privada;
+        usuario.frase_secreta = frase_secreta;
+        usuario.grupo = grupo;
+        usuario.senha_pessoal = senha_pessoal;
+
+        return usuario;
     }
 
 

@@ -67,6 +67,13 @@ public class Decriptacao{
         return dados_decriptados;
     }
 
+    public static byte[] recuperaTextoPlano(String nome_arquivo, String caminho_chave_privada, String frase_secreta) throws Exception{
+        PrivateKey chave_privada = restauraChavePrivada(caminho_chave_privada, frase_secreta);
+        SecretKey chave_secreta = decriptaEnvelope(nome_arquivo, chave_privada);
+        byte[] dados_arquivo = decriptaArquivo(nome_arquivo, chave_secreta);
+        return dados_arquivo;
+    }
+
     public static void main(String args[]){
         PrivateKey chave_privada = null;
         SecretKey chave_secreta = null;
