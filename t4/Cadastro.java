@@ -18,26 +18,7 @@ public class Cadastro{
         return 0;
     }
 
-    private static int valida_senha(String senha) {
-        int tam = senha.length();
-        if (tam < 8 || tam > 10) {
-            System.out.println("ERRO: A senha deve ter entre 8 a 10 caracteres.");
-            return -1;
-        }
-        if (!senha.matches("\\d+")) {
-            System.out.println("ERRO: A senha deve conter apenas dígitos.");
-            return -1;
-        }
-        for (int i = 0; i < tam - 2; i++) {
-            if (senha.charAt(i) == senha.charAt(i + 1) && senha.charAt(i + 1) == senha.charAt(i + 2)) {
-                System.out.println("ERRO: A senha não aceita sequências de números repetidos.");
-                return -1;
-            }
-        }
-        return 0;
-    }
-
-    public static void executa_formulario(){
+    public static Usuario executa_formulario(Usuario usuario){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Formulário de Cadastro:");
         System.out.print("Caminho do arquivo do certificado digital: ");
@@ -66,11 +47,28 @@ public class Cadastro{
         }
         System.out.print("Senha pessoal: ");
         String senha_pessoal = scanner.nextLine();
-        while(valida_senha(senha_pessoal) == -1){
+        while(valida_campo_string(senha_pessoal, 10) == -1){
             System.out.print("Senha pessoal: ");
             senha_pessoal = scanner.nextLine();
         }
         System.out.print("Confirmação senha pessoal: ");
-        String confirmacao_senha_pessoal = scanner.nextLine(); // confirmacao apenas quando clicar no botao de cadastrar
+        String confirmacao_senha_pessoal = scanner.nextLine();
+        while(valida_campo_string(confirmacao_senha_pessoal, 10) == -1){
+            System.out.print("Confirmação senha pessoal: ");
+            confirmacao_senha_pessoal = scanner.nextLine();
+        }
+
+        usuario.caminho_certificado = caminho_certificado;
+        usuario.caminho_chave_privada = caminho_chave_privada;
+        usuario.frase_secreta = frase_secreta;
+        usuario.grupo = grupo;
+        usuario.senha_pessoal = senha_pessoal;
+
+        return usuario;
     }
+
+
+
+
+
 }
